@@ -44,7 +44,7 @@ If NOT(doesFileExist(fileXml & ".BAK")) Then
     '
     objFSO.CopyFile fileXml, fileXml & ".BAK"
     If Err Then
-        sTitle = "Error " & Err.Number & vbCrLf & "with files: " & fileXml & vbCrLf & fileXml & ".BAK"
+        sTitle = "Error " & Err.Number & vbCrLf & Err.description & vbCrLf & "with files: " & fileXml & vbCrLf & fileXml & ".BAK"
         MsgBox sTitle, vbOKOnly  + vbCritical, "ERROR writing"
         WScript.Quit 1
     End If
@@ -135,8 +135,6 @@ Select Case iResponse
         WScript.Quit
 End Select
 
-
-
 '  File located at <UFT>\bin\log.config.xml'
 Set xmlDoc = CreateObject("Microsoft.XMLDOM")
 
@@ -219,7 +217,7 @@ On Error Resume Next
 '
 strResult = xmldoc.save(fileXml)
 If Err Then
-    MsgBox "Error " & Err.Number & vbCrLf & "with file: " & fileXml, vbOKOnly  + vbCritical, "ERROR writing"
+    MsgBox "Error " & Err.Number & vbCrLf & Err.description & vbCrLf & "with file: " & fileXml, vbOKOnly  + vbCritical, "ERROR writing"
     WScript.Quit 1
 End If
 On Error GoTo 0
@@ -330,14 +328,35 @@ Function deleteUFTLogs()
         killProcess(pName)
     End If
 
-    Set oFSO = CreateObject("Scripting.FileSystemObject")
+    Set objFSO = CreateObject("Scripting.FileSystemObject")
+    Set regexNumber = New RegExp
+
+    regexNumber.Global = True
+    regexNumber.IgnoreCase = True
+    regexNumber.Pattern = "^\d+$"
+
     ' Delete Existing Files
     On Error Resume Next
-    For Each oFile In oFSO.GetFolder(logsFldr).Files
-        oFile.Delete
+    For Each oFile In objFSO.GetFolder(logsFldr).Files
+
+        'Get only files that start with HP.'
+        sFile = oFile.Name
+        If StrComp(UCase(Left(sFile, 3)), "HP.", vbTextCompare) = 0 Then
+            'Get Extension to lower case'
+            sFileExt = LCase(objFSO.GetExtensionName(oFile.Name))
+            If sFileExt = "log" Then
+                oFile.Delete
+            ElseIf regexNumber.Test(sFileExt) Then
+                'look at extension to be a number and delete if True
+                oFile.Delete
+            End If
+        End If
     Next
+    ' TODO get error description permission issue when saveing XMLDOM
+    ' TODO get error description when saving  BAK
     On Error GoTo 0
-    Set oFSO = Nothing
+    Set regexNumber = Nothing
+    Set objFSO = Nothing
 End Function
 
 '**********************************************************************
