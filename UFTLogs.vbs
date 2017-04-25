@@ -16,6 +16,11 @@ End If
 
 pInstallLoc = getInstallLocation("HP Unified Functional Testing")
 
+'starting at UFT 14 name changed for UFT'
+If Len(pInstallLoc < 2) Then
+    pInstallLoc = getInstallLocation("HPE Unified Functional Testing")
+End If
+
 'ask for core mode'
 iResponse = MsgBox("Do you want UFT log files deleted?", vbYesNoCancel, "UFT Log delete")
 
@@ -352,8 +357,6 @@ Function deleteUFTLogs()
             End If
         End If
     Next
-    ' TODO get error description permission issue when saveing XMLDOM
-    ' TODO get error description when saving  BAK
     On Error GoTo 0
     Set regexNumber = Nothing
     Set objFSO = Nothing
