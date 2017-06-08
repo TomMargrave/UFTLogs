@@ -17,7 +17,7 @@ End If
 pInstallLoc = getInstallLocation("HP Unified Functional Testing")
 
 'starting at UFT 14 name changed for UFT'
-If Len(pInstallLoc < 2) Then
+If (Len(pInstallLoc) < 2) Then
     pInstallLoc = getInstallLocation("HPE Unified Functional Testing")
 End If
 
