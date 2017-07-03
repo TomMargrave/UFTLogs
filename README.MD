@@ -1,5 +1,5 @@
 # UFTLogs.vbs
-VBScript UFTLogs.vbs is used to assist in setting HPE Unified Functional Testing (UFT), UFT License, UFT API, and other logs
+VBScript UFTLogs.vbs is used to assist in setting HPE Unified Functional Testing (UFT) Core, UFT License, UFT API, and Remote Agents.  
 
 ## Purpose
 
@@ -10,7 +10,8 @@ When trouble-shooting issues with UFT, sometimes support will ask to have UFT lo
 
 1. Manual changing of the xml can lead to time lost and manual errors.
 2. Confusion on what items were changed and needs to be changed back.
-3.  TODO More information?
+
+     NOTE:  This does not work with BPT debug mode.
 
 ## Overview of Code steps
 Runing of this code can be done by clicking on the VBS file.
